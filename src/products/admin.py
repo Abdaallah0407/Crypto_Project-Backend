@@ -15,3 +15,11 @@ class CartitemAdmin(admin.ModelAdmin):
 @admin.register(Table_Headers)
 class Table_HeadersAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title')
+
+@admin.register(ItemDevice)
+class ItemDeviceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'quantity', 'product')

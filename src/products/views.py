@@ -1,6 +1,7 @@
 # from django import views
 from msilib import Table
 from operator import index
+from os import device_encoding
 from turtle import title
 from urllib import request
 from rest_framework import views
@@ -10,9 +11,32 @@ from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from .models import CartItem, Table_Product, Table_Headers
-from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer
+from .models import CartItem, Table_Product, Table_Headers, Device, ItemDevice
+from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer
 import random
+
+
+class APIDeviceView(viewsets.ModelViewSet):
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
+
+
+class APIDeviceItemProduct(generics.CreateAPIView):
+    serializer_class = DeviceItemSerializer
+    permission_classes = (permissions.AllowAny,)
+    queryset = Device.objects.all()
+
+    def post(self, request, *args, **kwargs):
+
+        product = Device.objects.get(pk=request.data['product'])
+        quantity = int(request.data['quantity'])
+        ItemDevice.objects.filter(
+            product=product).update(quantity=quantity)
+
+        device_item, created = ItemDevice.objects.update_or_create(product=product,
+                                                                   quantity=quantity)
+        device_item.save()
+        return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
 
 
 class APICartItemProduct(generics.CreateAPIView):
@@ -107,14 +131,22 @@ class NextPreviouTable(views.APIView):
 
         return queryset
 
+
 class PriceDevice(viewsets.ModelViewSet):
     def get_queryset(self):
         get_id = self.request.query_params.get('get_id')
+        get_device = self.request.query_params.get('get_device')
         table_product = Table_Product.objects.get(id=get_id)
+
+        device_item = ItemDevice.objects.get(id=get_device)
+
         mul = table_product.totality * table_product.price
         table_product.price_device = mul
+
+        summa = table_product.price_device * device_item.quantity
+        table_product.price_per_quantity = summa
+
         table_product.save()
         queryset = Table_Product.objects.filter(id=get_id)
         return queryset
-
     serializer_class = TableProductListSerializer
