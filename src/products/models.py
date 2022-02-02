@@ -31,7 +31,13 @@ class Table_Product(models.Model):
 class CartItem(models.Model):
     product = models.ForeignKey(
         Table_Product, on_delete=models.CASCADE, blank=True, null=True)
+    price = models.DecimalField(
+        verbose_name="Цена", max_digits=10, decimal_places=2, blank=True, null=True)
+    quantity = models.PositiveIntegerField(verbose_name="Количество", blank=True, null=True)
+
     data_added = models.DateTimeField(auto_now_add=True, null=True)
+
+
 
     class Meta:
         verbose_name = "Товар в корзине"
@@ -39,6 +45,9 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.product.title}"
+
+    def get_cost(self):
+        return self.price * self.quantity
 
 
 class Table_Headers(models.Model):

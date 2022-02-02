@@ -1,10 +1,11 @@
 from django.urls import path
 from django.urls import include
 from rest_framework import routers
-from .views import APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable
+from .views import APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable, PriceDevice
 
 
 router = routers.DefaultRouter()
+router.register('api/price-device', PriceDevice, "price")
 router.register('api/table-products', APITableProductViewSet, 'products')
 router.register('api/table-headers', APITable_HeadersViewSet,
                 'topik-characteristic')

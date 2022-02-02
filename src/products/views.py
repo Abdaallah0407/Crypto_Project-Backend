@@ -14,6 +14,45 @@ from .models import CartItem, Table_Product, Table_Headers
 from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer
 
 
+
+
+class APICartItemProduct(generics.CreateAPIView):
+    queryset = Table_Product.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    def post(self, request, *args, **kwargs):
+        queryset = Table_Product.objects.filter(
+            pk=request.data['product']).first()
+        cart_item, created = CartItem.objects.update_or_create(
+            product=queryset)
+        cart_item.save()
+        return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
+
+
+class DestroyAPICartItem(generics.DestroyAPIView):
+    serializer_class = CartItemSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    queryset = CartItem.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        cart_item = CartItem.objects.get(product=request.data['product'])
+        cart_item.delete()
+
+        return Response({"Success": "Deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class APITable_HeadersViewSet(viewsets.ModelViewSet):
+    serializer_class = Table_HeadersSerializer
+
+    queryset = Table_Headers.objects.all()
+
+
+
 class APITableProductViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
@@ -67,38 +106,26 @@ class NextPreviouTable(views.APIView):
 
         return queryset
 
+    # def get_deviceprice(self):
+    #     get_id = self.request.query_params.get('get_id')
+    #     table_product = Table_Product.objects.get(id=get_id)
+    #     mul = table_product.totality * table_product.price
+    #     table_product.price_device = mul
+    #     table_product.save()
+    #     get_deviceprice = Table_Product.objects.filter(id=get_id)
+    #     return get_deviceprice
 
-class APICartItemProduct(generics.CreateAPIView):
-    queryset = Table_Product.objects.all()
-    serializer_class = CartItemSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
-    def post(self, request, *args, **kwargs):
-        queryset = Table_Product.objects.filter(
-            pk=request.data['product']).first()
-        cart_item, created = CartItem.objects.update_or_create(
-            product=queryset)
-        cart_item.save()
-        return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
+    # serializer_class = TableProductListSerializer
 
 
-class DestroyAPICartItem(generics.DestroyAPIView):
-    serializer_class = CartItemSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    queryset = CartItem.objects.all()
+class PriceDevice(viewsets.ModelViewSet):
+    def get_queryset(self):
+        get_id = self.request.query_params.get('get_id')
+        table_product = Table_Product.objects.get(id=get_id)
+        mul = table_product.totality * table_product.price
+        table_product.price_device = mul
+        table_product.save()
+        queryset = Table_Product.objects.filter(id=get_id)
+        return queryset
 
-    def post(self, request, *args, **kwargs):
-        cart_item = CartItem.objects.get(product=request.data['product'])
-        cart_item.delete()
-
-        return Response({"Success": "Deleted"}, status=status.HTTP_204_NO_CONTENT)
-
-
-class APITable_HeadersViewSet(viewsets.ModelViewSet):
-    serializer_class = Table_HeadersSerializer
-
-    queryset = Table_Headers.objects.all()
+    serializer_class = TableProductListSerializer
