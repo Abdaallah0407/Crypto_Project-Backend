@@ -12,8 +12,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 from .models import CartItem, Table_Product, Table_Headers
 from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer
-
-
+import random
 
 
 class APICartItemProduct(generics.CreateAPIView):
@@ -52,7 +51,6 @@ class APITable_HeadersViewSet(viewsets.ModelViewSet):
     queryset = Table_Headers.objects.all()
 
 
-
 class APITableProductViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
@@ -74,8 +72,11 @@ class FillTable(views.APIView):
 
             totality = previous_month_product.totality + countf
 
+            k = random.randint(10000, 100000)
+
             table_product = Table_Product.objects.update_or_create(
-                title="%s M" % i, count=countf, totality=totality, price=0)
+                title="%s M" % i, count=countf, totality=totality, price=k)
+
         queryset = Table_Product.objects.all()
         return Response(queryset, status=status.HTTP_201_CREATED)
 
@@ -105,18 +106,6 @@ class NextPreviouTable(views.APIView):
         tableprod.save()
 
         return queryset
-
-    # def get_deviceprice(self):
-    #     get_id = self.request.query_params.get('get_id')
-    #     table_product = Table_Product.objects.get(id=get_id)
-    #     mul = table_product.totality * table_product.price
-    #     table_product.price_device = mul
-    #     table_product.save()
-    #     get_deviceprice = Table_Product.objects.filter(id=get_id)
-    #     return get_deviceprice
-
-    # serializer_class = TableProductListSerializer
-
 
 class PriceDevice(viewsets.ModelViewSet):
     def get_queryset(self):
