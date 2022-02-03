@@ -5,7 +5,7 @@ from .views import APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICa
 
 
 router = routers.DefaultRouter()
-router.register('api/next-table', NextPreviouTable, "price")
+router.register('api/next-table', NextPreviouTable, "next")
 router.register('api/table-products', APITableProductViewSet, 'products')
 router.register('api/table-headers', APITable_HeadersViewSet,
                 'topik-characteristic')
