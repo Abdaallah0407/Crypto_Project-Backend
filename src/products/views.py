@@ -132,6 +132,8 @@ class NextPreviouTable(viewsets.ModelViewSet):
                 title__contains="%s M" % str(i-1)).first()
             table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i)).first()
+            table_price = Table_Product.objects.filter(
+                title__contains="%s M" % str(i-1)).first()
 
             table_prod.totality = prev_mon_table_prod.totality + counts
             table_prod.price_device = table_prod.totality * table_prod.price
@@ -155,41 +157,3 @@ class NextPreviouTable(viewsets.ModelViewSet):
         get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
-
-    # def get_divice(self):
-    #     get_pk = self.request.query_params.get('get_pk')
-    #     get_device = self.request.query_params.get('get_device')
-    #     table_product = Table_Product.objects.get(id=get_pk)
-
-    #     device_item = ItemDevice.objects.get(id=get_device)
-
-    #     mul = table_product.totality * table_product.price
-    #     table_product.price_device = mul
-
-    #     summa = table_product.price_device * device_item.quantity
-    #     table_product.price_per_quantity = summa
-
-    #     table_product.save()
-    #     get_device = Table_Product.objects.filter(id=get_pk)
-    #     return get_device
-    # serializer_class = TableProductListSerializer
-
-
-# class PriceDevice(viewsets.ModelViewSet):
-#     def get_queryset(self):
-#         get_id = self.request.query_params.get('get_id')
-#         get_device = self.request.query_params.get('get_device')
-#         table_product = Table_Product.objects.get(id=get_id)
-
-#         device_item = ItemDevice.objects.get(id=get_device)
-
-#         mul = table_product.totality * table_product.price
-#         table_product.price_device = mul
-
-#         summa = table_product.price_device * device_item.quantity
-#         table_product.price_per_quantity = summa
-
-#         table_product.save()
-#         queryset = Table_Product.objects.filter(id=get_id)
-#         return queryset
-#     serializer_class = TableProductListSerializer
