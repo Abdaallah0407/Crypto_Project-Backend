@@ -141,7 +141,7 @@ class PriceDevice(viewsets.ModelViewSet):
         device_item = ItemDevice.objects.get(id=get_device)
 
         mul = table_product.totality * table_product.price
-        table_product.price_device = mul
+        table_product.price_device = mul 
 
         summa = table_product.price_device * device_item.quantity
         table_product.price_per_quantity = summa
