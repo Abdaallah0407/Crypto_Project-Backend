@@ -83,7 +83,6 @@ class APITableProductViewSet(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
     pagination_class = PaginationProducts
 
-
     def get_queryset(self):
         queryset = Table_Product.objects.order_by('id')
 
@@ -91,16 +90,11 @@ class APITableProductViewSet(viewsets.ModelViewSet):
 
 
 class FillTable(views.APIView):
-    permission_classes = [
-        permissions.AllowAny
-    ]
-
     def get_queryset(self):
         table_product = Table_Product.objects.all().first()
         countf = table_product.count
         for i in range(2, 61):
             title = "%s M" % (i-1)
-
             previous_month_product = Table_Product.objects.filter(
                 title__contains=title).first()
 
@@ -108,8 +102,10 @@ class FillTable(views.APIView):
 
             k = random.randint(10000, 100000)
 
+            mul = totality * k
+
             table_product = Table_Product.objects.update_or_create(
-                title="%s M" % i, count=countf, totality=totality, price=k)
+                title="%s M" % i, count=countf, totality=totality, price=k, price_device=mul)
 
         queryset = Table_Product.objects.all()
         return Response(queryset, status=status.HTTP_201_CREATED)
@@ -138,23 +134,25 @@ class NextPreviouTable(viewsets.ModelViewSet):
                 title__contains="%s M" % str(i)).first()
 
             table_prod.totality = prev_mon_table_prod.totality + counts
+            table_prod.price_device = table_prod.totality * table_prod.price
+
             table_prod.save()
         tableprod.save()
 
-        get_pk = self.request.query_params.get('get_pk')
+        # get_pk = self.request.query_params.get('get_pk')
         get_device = self.request.query_params.get('get_device')
-        table_product = Table_Product.objects.get(id=get_pk)
+        table_product = Table_Product.objects.get(id=get_id)
 
         device_item = ItemDevice.objects.get(id=get_device)
 
-        mul = table_product.totality * table_product.price
-        table_product.price_device = mul
+        # mul = table_product.totality * table_product.price
+        # table_product.price_device = mul
 
         summa = table_product.price_device * device_item.quantity
         table_product.price_per_quantity = summa
 
         table_product.save()
-        get_device = Table_Product.objects.filter(id=get_pk)
+        get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
 
