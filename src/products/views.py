@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 from .models import CartItem, Table_Product, Table_Headers, Device, ItemDevice
 from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer
+from .service import PaginationProducts
 import random
 
 
@@ -80,8 +81,13 @@ class APITableProductViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = TableProductListSerializer
+    pagination_class = PaginationProducts
 
-    queryset = Table_Product.objects.all()
+
+    def get_queryset(self):
+        queryset = Table_Product.objects.order_by('id')
+
+        return queryset
 
 
 class FillTable(views.APIView):
