@@ -34,7 +34,7 @@ class APIDeviceItemProduct(viewsets.ModelViewSet):
         ItemDevice.objects.filter(
             product=product).update(quantity=quantity)
 
-        device_item, created = ItemDevice.objects.update_or_create(product=product,
+        device_item = ItemDevice.objects.update_or_create(product=product,
                                                                    quantity=quantity)
         device_item.save()
         return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
