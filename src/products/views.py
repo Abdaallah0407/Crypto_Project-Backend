@@ -39,9 +39,14 @@ class APIDeviceItemProduct(viewsets.ModelViewSet):
         device_item.save()
         return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
 
+
 class APIDeviceUpdateItem(generics.CreateAPIView):
     serializer_class = DeviceItemSerializer
     queryset = ItemDevice.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    
 
     def post(self, request, *args, **kwargs):
 
@@ -57,7 +62,6 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
             device_item.quantity += 1
         device_item.save()
         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
-
 
 
 class APICartItemProduct(generics.CreateAPIView):
@@ -145,6 +149,8 @@ class NextPreviouTable(viewsets.ModelViewSet):
         table_prod = Table_Product.objects.filter(
             title__contains="%s M" % str(month+1)).first()
         table_prod.totality = table_prod.count
+        table_prod.price_device = table_prod.totality * table_prod.price
+
         table_prod.save()
         counts = table_prod.count
         for i in range(month+2, 61):

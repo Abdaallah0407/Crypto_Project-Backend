@@ -52,6 +52,7 @@ class Table_Product(models.Model):
         null=True, blank=True, verbose_name='Доступно за 1 апарат')
     price_per_quantity = models.IntegerField(
         null=True, blank=True, verbose_name='Доступная цена за количевство апаратов')
+    draft = models.BooleanField(verbose_name="Продал", default=False)
 
     def __str__(self):
         return self.title
