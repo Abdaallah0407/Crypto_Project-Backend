@@ -141,6 +141,9 @@ class FillTable(views.APIView):
 
 class NextPreviouTable(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
     def get_queryset(self):
         queryset = Table_Product.objects.all().order_by('id')
