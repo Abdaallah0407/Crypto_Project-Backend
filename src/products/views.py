@@ -175,7 +175,7 @@ class NextPreviouTable(viewsets.ModelViewSet):
         get_device = self.request.query_params.get('get_device')
         table_product = Table_Product.objects.get(id=get_id)
 
-        device_item = ItemDevice.objects.get(id=get_device)
+        device_item = ItemDevice.objects.all().first()
 
         # mul = table_product.totality * table_product.price
         # table_product.price_device = mul
