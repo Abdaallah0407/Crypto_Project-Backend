@@ -7,7 +7,7 @@ from urllib import request
 from rest_framework import views
 from django.db.models import query
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
@@ -24,6 +24,7 @@ class APIDeviceView(viewsets.ModelViewSet):
 
 class APIDeviceItemProduct(viewsets.ModelViewSet):
     serializer_class = DeviceItemSerializer
+    permission_classes = (permissions.AllowAny,)
     queryset = ItemDevice.objects.all()
 
     def post(self, request, *args, **kwargs):
@@ -70,7 +71,9 @@ class APIDeviceItemProduct(viewsets.ModelViewSet):
 class APICartItemProduct(generics.CreateAPIView):
     queryset = Table_Product.objects.all()
     serializer_class = CartItemSerializer
-   
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
     def post(self, request, *args, **kwargs):
         queryset = Table_Product.objects.filter(
@@ -83,7 +86,9 @@ class APICartItemProduct(generics.CreateAPIView):
 
 class DestroyAPICartItem(generics.DestroyAPIView):
     serializer_class = CartItemSerializer
-    
+    permission_classes = [
+        permissions.AllowAny
+    ]
     queryset = CartItem.objects.all()
 
     def post(self, request, *args, **kwargs):
@@ -100,7 +105,9 @@ class APITable_HeadersViewSet(viewsets.ModelViewSet):
 
 
 class APITableProductViewSet(viewsets.ModelViewSet):
-  
+    permission_classes = [
+        permissions.AllowAny
+    ]
     serializer_class = TableProductListSerializer
     pagination_class = PaginationProducts
 
@@ -134,7 +141,9 @@ class FillTable(views.APIView):
 
 class NextPreviouTable(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
-    
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
     def get_queryset(self):
         queryset = Table_Product.objects.all().order_by('id')
