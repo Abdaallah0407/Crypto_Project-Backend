@@ -25,7 +25,7 @@ class APIDeviceView(viewsets.ModelViewSet):
 class APIDeviceItemProduct(viewsets.ModelViewSet):
     serializer_class = DeviceItemSerializer
     permission_classes = (permissions.AllowAny,)
-    queryset = Device.objects.all()
+    queryset = ItemDevice.objects.all()
 
     def post(self, request, *args, **kwargs):
 
@@ -35,37 +35,37 @@ class APIDeviceItemProduct(viewsets.ModelViewSet):
             product=product).update(quantity=quantity)
 
         device_item = ItemDevice.objects.update_or_create(product=product,
-                                                                   quantity=quantity)
+                                                          quantity=quantity)
         device_item.save()
         return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
 
 
-class APIDeviceUpdateItem(generics.CreateAPIView):
-    serializer_class = DeviceItemSerializer
-    queryset = ItemDevice.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
+# class APIDeviceUpdateItem(generics.CreateAPIView):
+#     serializer_class = DeviceItemSerializer
+#     queryset = ItemDevice.objects.all()
+#     permission_classes = [
+#         permissions.AllowAny
+#     ]
 
-    def post(self, request, *args, **kwargs):
+#     def post(self, request, *args, **kwargs):
 
-        device_id = request.data['device_item']
-        print(device_id)
-        product = Device.objects.get(id=device_id)
+#         device_id = request.data['device_item']
+#         print(device_id)
+#         product = Device.objects.get(id=device_id)
 
-        device_item = ItemDevice.objects.filter(product=product).first()
-        if device_item:
-            if 'minus' in self.request.query_params:
-                if device_item.quantity > 1:
-                    device_item.quantity -= 1
-            else:
-                device_item.quantity += 1
-        else:
-            device_item = ItemDevice.objects.create(
-                product=product, quantity=2)
-        device_item.save()
+#         device_item = ItemDevice.objects.filter(product=product).first()
+#         if device_item:
+#             if 'minus' in self.request.query_params:
+#                 if device_item.quantity > 1:
+#                     device_item.quantity -= 1
+#             else:
+#                 device_item.quantity += 1
+#         else:
+#             device_item = ItemDevice.objects.create(
+#                 product=product, quantity=2)
+#         device_item.save()
 
-        return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
+#         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
 
 
 class APICartItemProduct(generics.CreateAPIView):
