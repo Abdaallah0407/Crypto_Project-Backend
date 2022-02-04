@@ -47,7 +47,7 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
 
         device_id = request.data['device_item']
 
-        device_item = CartItem.objects.get(id=device_id)
+        device_item = ItemDevice.objects.get(id=device_id)
 
         # if cart_item.quantity>1:
         if 'minus' in self.request.query_params:
