@@ -22,7 +22,7 @@ class APIDeviceView(viewsets.ModelViewSet):
     serializer_class = DeviceSerializer
 
 
-class APIDeviceItemProduct(generics.CreateAPIView):
+class APIDeviceItemProduct(viewsets.ModelViewSet):
     serializer_class = DeviceItemSerializer
     permission_classes = (permissions.AllowAny,)
     queryset = Device.objects.all()
@@ -38,6 +38,26 @@ class APIDeviceItemProduct(generics.CreateAPIView):
                                                                    quantity=quantity)
         device_item.save()
         return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
+
+class APIDeviceUpdateItem(generics.CreateAPIView):
+    serializer_class = DeviceItemSerializer
+    queryset = ItemDevice.objects.all()
+
+    def post(self, request, *args, **kwargs):
+
+        device_id = request.data['device_item']
+
+        device_item = CartItem.objects.get(id=device_id)
+
+        # if cart_item.quantity>1:
+        if 'minus' in self.request.query_params:
+            if device_item.quantity > 1:
+                device_item.quantity -= 1
+        else:
+            device_item.quantity += 1
+        device_item.save()
+        return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
+
 
 
 class APICartItemProduct(generics.CreateAPIView):
