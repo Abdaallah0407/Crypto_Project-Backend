@@ -46,21 +46,25 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
     permission_classes = [
         permissions.AllowAny
     ]
-    
 
     def post(self, request, *args, **kwargs):
 
         device_id = request.data['device_item']
+        print(device_id)
+        product = Device.objects.get(id=device_id)
 
-        device_item = ItemDevice.objects.get(id=device_id)
-
-        # if cart_item.quantity>1:
-        if 'minus' in self.request.query_params:
-            if device_item.quantity > 1:
-                device_item.quantity -= 1
+        device_item = ItemDevice.objects.filter(product=product).first()
+        if device_item:
+            if 'minus' in self.request.query_params:
+                if device_item.quantity > 1:
+                    device_item.quantity -= 1
+            else:
+                device_item.quantity += 1
         else:
-            device_item.quantity += 1
+            device_item = ItemDevice.objects.create(
+                product=product, quantity=2)
         device_item.save()
+
         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
 
 
