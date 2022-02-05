@@ -223,29 +223,29 @@ class PreviouTable(viewsets.ModelViewSet):
         queryset = Table_Product.objects.all().order_by('id')
         get_id = self.request.query_params.get('get_id')
 
-        tableprod = Table_Product.objects.get(pk=get_id)
-        title = tableprod.title
+        table_prod = Table_Product.objects.get(pk=get_id)
+        title = table_prod.title
         title = title.replace(" M", "")
         month = int(title)
         print(month)
-        table_prod = Table_Product.objects.filter(
-            title__contains="%s M" % str(month)).first()
-        table_prod.totality = table_prod.count
-        table_prod.price_device = table_prod.totality * table_prod.price
+        # table_prod = Table_Product.objects.filter(
+        #     title__contains="%s M" % str(month)).first()
+        # table_prod.totality = table_prod.count
+        # table_prod.price_device = table_prod.totality * table_prod.price
 
-        table_prod.save()
+        # table_prod.save()
         counts = table_prod.count
         for i in range(month+1, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i-1)).first()
-            table_prod = Table_Product.objects.filter(
+            table = Table_Product.objects.filter(
                 title__contains="%s M" % str(i)).first()
 
-            table_prod.totality = prev_mon_table_prod.totality + counts
-            table_prod.price_device = table_prod.totality * table_prod.price
+            table.totality = prev_mon_table_prod.totality + counts
+            # table_prod.price_device = table_prod.totality * table.price
 
-            table_prod.save()
-        tableprod.save()
+            table.save()
+        # tableprod.save()
 
         # get_pk = self.request.query_params.get('get_pk')
         # get_device = self.request.query_params.get('get_device')
