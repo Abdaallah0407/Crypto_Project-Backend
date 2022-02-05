@@ -227,7 +227,6 @@ class PreviouTable(viewsets.ModelViewSet):
         title = table_prod.title
         title = title.replace(" M", "")
         month = int(title)
-        print(month)
         # table_prod = Table_Product.objects.filter(
         #     title__contains="%s M" % str(month)).first()
         # table_prod.totality = table_prod.count
@@ -249,6 +248,8 @@ class PreviouTable(viewsets.ModelViewSet):
 
         # get_pk = self.request.query_params.get('get_pk')
         # get_device = self.request.query_params.get('get_device')
+
+        
         table_product = Table_Product.objects.get(id=get_id)
 
         device_item = ItemDevice.objects.all().first()
@@ -258,6 +259,12 @@ class PreviouTable(viewsets.ModelViewSet):
 
         summa = table_product.price_device * device_item.quantity
         table_product.price_per_quantity = summa
+        
+        price_per_quantity = table_product.price_per_quantity
+
+        if price_per_quantity:
+            table_product.price_per_quantity = None
+            
 
         table_product.save()
         # get_device = Table_Product.objects.filter(id=get_id)
