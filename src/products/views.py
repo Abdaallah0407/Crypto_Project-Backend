@@ -227,14 +227,15 @@ class PreviouTable(viewsets.ModelViewSet):
         title = tableprod.title
         title = title.replace(" M", "")
         month = int(title)
+        print(month)
         table_prod = Table_Product.objects.filter(
-            title__contains="%s M" % str(month+1)).first()
-        # table_prod.totality = table_prod.count
+            title__contains="%s M" % str(month)).first()
+        table_prod.totality = table_prod.count
         table_prod.price_device = table_prod.totality * table_prod.price
 
         table_prod.save()
         counts = table_prod.count
-        for i in range(month-2, 61):
+        for i in range(month+1, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i-1)).first()
             table_prod = Table_Product.objects.filter(
