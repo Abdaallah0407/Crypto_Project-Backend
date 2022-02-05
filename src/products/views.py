@@ -1,4 +1,5 @@
 # from django import views
+from itertools import product
 from msilib import Table
 from operator import index
 from os import device_encoding
@@ -78,12 +79,15 @@ class APICartItemProduct(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         queryset = Table_Product.objects.filter(
             pk=request.data['product']).first()
-        
-        # get_id = self.request.query_params.get('get_id')
 
         tablepsolid = Table_Product.objects.get(pk=request.data['product'])
+
         is_solid = tablepsolid.is_solid
+
+        is_solid = Table_Product.objects.update(product=queryset)
+
         is_solid.save()
+
         cart_item, created = CartItem.objects.update_or_create(
             product=queryset)
         cart_item.save()
