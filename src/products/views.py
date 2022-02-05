@@ -83,11 +83,11 @@ class APICartItemProduct(generics.CreateAPIView):
         tablepsolid = Table_Product.objects.get(pk=request.data['product'])
 
         is_solid = tablepsolid.is_solid
-
-        is_solid = Table_Product.objects.update(is_solid=queryset)
-
-        is_solid.save()
-
+        if is_solid:
+            tablepsolid.is_solid = False
+        else:
+            tablepsolid.is_solid = True
+        tablepsolid.save()
         cart_item, created = CartItem.objects.update_or_create(
             product=queryset)
         cart_item.save()
