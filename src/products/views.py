@@ -84,7 +84,7 @@ class APICartItemProduct(generics.CreateAPIView):
 
         is_solid = tablepsolid.is_solid
 
-        is_solid = Table_Product.objects.update(product=queryset)
+        is_solid = Table_Product.objects.update(is_solid=queryset)
 
         is_solid.save()
 
