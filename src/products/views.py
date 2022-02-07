@@ -14,6 +14,9 @@ import random
 
 
 class APIDeviceView(viewsets.ModelViewSet):
+    permission_classes = [
+        permissions.AllowAny
+    ]
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
