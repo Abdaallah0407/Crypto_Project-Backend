@@ -187,7 +187,6 @@ class NextPreviouTable(viewsets.ModelViewSet):
             table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i)).first()
             if table_prod.is_solid:
-                print('yess')
                 break
             table_prod.totality = prev_mon_table_prod.totality + counts
             table_prod.price_device = table_prod.totality * table_prod.price
@@ -244,6 +243,8 @@ class PreviouTable(viewsets.ModelViewSet):
                 title__contains="%s M" % str(i-1)).first()
             table = Table_Product.objects.filter(
                 title__contains="%s M" % str(i)).first()
+            if table.is_solid:
+                break
 
             table.totality = prev_mon_table_prod.totality + counts
             table.price_device = table.totality * table.price
