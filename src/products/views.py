@@ -191,11 +191,11 @@ class NextPreviouTable(viewsets.ModelViewSet):
             table_prod.price_device = table_prod.totality * table_prod.price
             if table_prod.price_per_quantity:
                 table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
-            if table_prod.is_solid:
-                break
             # table_prod.price_per_quantity = tableprod.price_device * device_item.quantity
 
             table_prod.save()
+            if table_prod.is_solid:
+                break
         tableprod.save()
 
         # get_pk = self.request.query_params.get('get_pk')
@@ -249,11 +249,12 @@ class PreviouTable(viewsets.ModelViewSet):
             table.price_device = table.totality * table.price
             if table.price_per_quantity:
                 table.price_per_quantity = table.price_device * device_item.quantity
-            if table.is_solid:
-                break
+
             # table_prod.price_device = table_prod.totality * table.price
 
             table.save()
+            if table.is_solid:
+                break
         # tableprod.save()
 
         # get_pk = self.request.query_params.get('get_pk')
