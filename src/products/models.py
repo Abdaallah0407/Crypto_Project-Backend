@@ -6,7 +6,7 @@ from django.db.models.deletion import CASCADE
 
 # Create your models here.
 class Device(models.Model):
-    title = models.CharField(max_length=50, verbose_name="Загаловок")
+    title = models.CharField(max_length=50, blank=True, verbose_name="Загаловок")
     description = models.TextField(
         null=True, blank=True, verbose_name="Описание")
     price = models.DecimalField(
