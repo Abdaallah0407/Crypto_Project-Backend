@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 from .models import CartItem, Table_Product, Table_Headers, Device, ItemDevice
-from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer,TableSumListSerializer
+from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer, TableSumListSerializer
 from .service import PaginationProducts
 import random
 
@@ -20,7 +20,9 @@ class APIDeviceView(viewsets.ModelViewSet):
 
 class APIDeviceItemProduct(viewsets.ModelViewSet):
     serializer_class = DeviceItemSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = [
+        permissions.AllowAny
+    ]
     queryset = ItemDevice.objects.all()
 
     def post(self, request, *args, **kwargs):
@@ -164,6 +166,7 @@ class NextPreviouTable(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Table_Product.objects.all().order_by('id')
         get_id = self.request.query_params.get('get_id')
+        device_item = ItemDevice.objects.all().first()
 
         tableprod = Table_Product.objects.get(pk=get_id)
         title = tableprod.title
@@ -173,6 +176,8 @@ class NextPreviouTable(viewsets.ModelViewSet):
             title__contains="%s M" % str(month+1)).first()
         table_prod.totality = table_prod.count
         table_prod.price_device = table_prod.totality * table_prod.price
+        if table_prod.price_per_quantity:
+            table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
 
         table_prod.save()
         counts = table_prod.count
@@ -181,11 +186,12 @@ class NextPreviouTable(viewsets.ModelViewSet):
                 title__contains="%s M" % str(i-1)).first()
             table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i)).first()
-            table_price = Table_Product.objects.filter(
-                title__contains="%s M" % str(i-1)).first()
 
             table_prod.totality = prev_mon_table_prod.totality + counts
             table_prod.price_device = table_prod.totality * table_prod.price
+            if table_prod.price_per_quantity:
+                table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
+            # table_prod.price_per_quantity = tableprod.price_device * device_item.quantity
 
             table_prod.save()
         tableprod.save()
@@ -194,7 +200,7 @@ class NextPreviouTable(viewsets.ModelViewSet):
         get_device = self.request.query_params.get('get_device')
         table_product = Table_Product.objects.get(id=get_id)
 
-        device_item = ItemDevice.objects.all().first()
+        # if item.get('price_per_quantity') != None:
 
         # mul = table_product.totality * table_product.price
         # table_product.price_device = mul
@@ -217,7 +223,7 @@ class PreviouTable(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Table_Product.objects.all().order_by('id')
         get_id = self.request.query_params.get('get_id')
-
+        device_item = ItemDevice.objects.all().first()
         table_prod = Table_Product.objects.get(pk=get_id)
         title = table_prod.title
         title = title.replace(" M", "")
@@ -225,7 +231,9 @@ class PreviouTable(viewsets.ModelViewSet):
         # table_prod = Table_Product.objects.filter(
         #     title__contains="%s M" % str(month)).first()
         # table_prod.totality = table_prod.count
-        # table_prod.price_device = table_prod.totality * table_prod.price
+        table_prod.price_device = table_prod.totality * table_prod.price
+        if table_prod.price_per_quantity:
+            table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
 
         # table_prod.save()
         counts = table_prod.count
@@ -236,6 +244,10 @@ class PreviouTable(viewsets.ModelViewSet):
                 title__contains="%s M" % str(i)).first()
 
             table.totality = prev_mon_table_prod.totality + counts
+            table.price_device = table.totality * table.price
+            if table.price_per_quantity:
+                table.price_per_quantity = table.price_device * device_item.quantity
+            
             # table_prod.price_device = table_prod.totality * table.price
 
             table.save()
@@ -244,7 +256,6 @@ class PreviouTable(viewsets.ModelViewSet):
         # get_pk = self.request.query_params.get('get_pk')
         # get_device = self.request.query_params.get('get_device')
 
-        
         table_product = Table_Product.objects.get(id=get_id)
 
         device_item = ItemDevice.objects.all().first()
@@ -254,12 +265,11 @@ class PreviouTable(viewsets.ModelViewSet):
 
         summa = table_product.price_device * device_item.quantity
         table_product.price_per_quantity = summa
-        
+
         price_per_quantity = table_product.price_per_quantity
 
         if price_per_quantity:
             table_product.price_per_quantity = None
-            
 
         table_product.save()
         # get_device = Table_Product.objects.filter(id=get_id)
@@ -286,8 +296,8 @@ class SumTable(viewsets.ModelViewSet):
 
     def get_total_cost(self):
         total_cost = sum(item.get_cost() for item in self.items.all())
-        
-        return total_cost 
+
+        return total_cost
 
     # for item in():
     #     if item.get('price_per_quantity') != None:
