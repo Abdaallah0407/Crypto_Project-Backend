@@ -1,9 +1,4 @@
 # from django import views
-from itertools import product
-from msilib import Table
-from operator import index
-from os import device_encoding
-from turtle import title
 from urllib import request
 from rest_framework import views
 from django.db.models import query
