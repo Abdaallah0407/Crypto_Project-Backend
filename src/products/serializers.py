@@ -40,3 +40,8 @@ class DeviceItemSerializer(serializers.ModelSerializer):
         fields = ('quantity', 'product')
 
 
+class TableSumListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Table_Product
+        fields = ('title','price_per_quantity')

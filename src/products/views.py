@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 from .models import CartItem, Table_Product, Table_Headers, Device, ItemDevice
-from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer
+from .serializers import CartItemSerializer, Table_HeadersSerializer, TableProductListSerializer, DeviceItemSerializer, DeviceSerializer,TableSumListSerializer
 from .service import PaginationProducts
 import random
 
@@ -270,3 +270,48 @@ class PreviouTable(viewsets.ModelViewSet):
         # get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
+
+
+# def counter():
+#     sum = 0
+
+#     for item in results:
+#         if item.get('price_per_quantity') != None:
+#             sum = sum+item.get('price_per_quantity')
+#     print(sum)
+# counter()
+
+
+class SumTable(viewsets.ModelViewSet):
+    serializer_class = TableSumListSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    queryset = Table_Product.objects.all().order_by('id')
+
+    def get_total_cost(self):
+        total_cost = sum(item.get_cost() for item in self.items.all())
+        
+        return total_cost 
+
+    # for item in():
+    #     if item.get('price_per_quantity') != None:
+    #         sum = queryset+item.get('price_per_quantity')
+
+    def get_total_cost(self):
+        total_cost = sum(item.get_cost() for item in self.items.all())
+        print(total_cost)
+        return total_cost
+
+    # def create(self):
+    #     price_per_quantity = Table_Product.objects.all().order_by('id')
+    #     price_quantity = price_per_quantity.price_per_quantity
+    #     summa = Table_Product.objects.filter(
+    #         price_per_quantity=price_quantity)
+    #     for item in ():
+    #          if item.get('price_per_quantity') != None:
+    #              summa = sum+item.get('price_per_quantity')
+
+    #              summa.save()
+
+    #     return Response(status=status.HTTP_201_CREATED)

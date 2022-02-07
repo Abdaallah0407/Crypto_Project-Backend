@@ -2,7 +2,7 @@ from django.urls import path
 from django.urls import include
 from rest_framework import routers
 
-from .views import APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable, APIDeviceView, APIDeviceItemProduct, APIDeviceUpdateItem, PreviouTable
+from .views import SumTable,APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable, APIDeviceView, APIDeviceItemProduct, APIDeviceUpdateItem, PreviouTable
 
 
 router = routers.DefaultRouter()
@@ -13,6 +13,7 @@ router.register('api/table-headers', APITable_HeadersViewSet,
                 'topik-characteristic')
 router.register('api/device', APIDeviceView,'device')
 router.register('api/device-item', APIDeviceItemProduct,'device-item')
+router.register('api/sum-item', SumTable,'device-item')
 
 
 
