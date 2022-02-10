@@ -66,7 +66,7 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
                 product=product, quantity=2)
         table_products = Table_Product.objects.filter(is_solid=True)
         for table_product in table_products:
-            table_product.price_per_quantity = table_product.price * device_item.quantity
+            table_product.price_per_quantity = table_product.price_device * device_item.quantity
             table_product.save()
         device_item.save()
 
