@@ -15,6 +15,10 @@ router.register('api/device', APIDeviceView,'device')
 router.register('api/device-item', APIDeviceItemProduct,'device-item')
 router.register('api/sum-item', SumTable,'device-item')
 
+# router.register('api/update-table', UpdatePriceQuantity,'update')
+
+
+
 
 
 APIDeviceView

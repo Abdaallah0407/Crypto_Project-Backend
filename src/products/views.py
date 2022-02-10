@@ -64,6 +64,10 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
         else:
             device_item = ItemDevice.objects.create(
                 product=product, quantity=2)
+        table_products = Table_Product.objects.filter(is_solid=True)
+        for table_product in table_products:
+            table_product.price_per_quantity = table_product.price * device_item.quantity
+            table_product.save()
         device_item.save()
 
         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
@@ -192,8 +196,19 @@ class NextPreviouTable(viewsets.ModelViewSet):
 
             table_prod.totality = prev_mon_table_prod.totality + counts
             table_prod.price_device = table_prod.totality * table_prod.price
+            # table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
             if table_prod.price_per_quantity:
                 table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
+                # if 'minus' in self.request.query_params:
+            #      if device_item.quantity > 1:
+            #             device_item.quantity -= 1
+            # else:
+            # #     device_item.quantityy +1
+            # elif device_item.quantity +1:
+            #     table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
+
+            # if table_prod.price_per_quantity:
+            #     table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
             # table_prod.price_per_quantity = tableprod.price_device * device_item.quantity
 
             table_prod.save()
@@ -217,6 +232,40 @@ class NextPreviouTable(viewsets.ModelViewSet):
         get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
+
+
+# class UpdatePriceQuantity(viewsets.ModelViewSet):
+#     def get_queryset(self, request, *args, **kwargs):
+#         product = Table_Product.objects.all().order_by('id')
+#         get_id = self.request.query_params.get('get_id')
+#         device_item = ItemDevice.objects.all().first()
+#         if device_item:
+
+#             if 'minus' in self.request.query_params:
+#                 if device_item.quantity > 1:
+#                     device_item.quantity -= 1
+#             else:
+#                 device_item.quantity += 1
+
+#         tableprod = Table_Product.objects.get(pk=get_id)
+#         title = tableprod.title
+#         title = title.replace(" M", "")
+#         month = int(title)
+#         table_prod = Table_Product.objects.filter(
+#             title__contains="%s M" % str(month+1)).first()
+
+#         for i in range(month+2, 61):
+#             update_month_product = Table_Product.objects.filter(
+#                 title__contains=get_id).first()
+
+#             table_prod = update_month_product.price_per_quantity * device_item.quantity
+
+#             table_prod = Table_Product.objects.update_or_create(
+#                 title="%s M" % i, price_per_quantity=table_prod)
+
+
+#         table_prod.save()
+#         tableprod.save()
 
 
 class PreviouTable(viewsets.ModelViewSet):
