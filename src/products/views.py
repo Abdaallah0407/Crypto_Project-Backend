@@ -176,6 +176,11 @@ class NextPreviouTable(viewsets.ModelViewSet):
         device_item = ItemDevice.objects.all().first()
 
         tableprod = Table_Product.objects.get(pk=get_id)
+
+        summa = tableprod.price_device * device_item.quantity
+        tableprod.price_per_quantity = summa
+        tableprod.save()
+
         title = tableprod.title
         title = title.replace(" M", "")
         month = int(title)
@@ -187,6 +192,8 @@ class NextPreviouTable(viewsets.ModelViewSet):
             table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
 
         table_prod.save()
+        if table_prod.is_solid:
+            return
         counts = table_prod.count
         for i in range(month+2, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
@@ -196,20 +203,8 @@ class NextPreviouTable(viewsets.ModelViewSet):
 
             table_prod.totality = prev_mon_table_prod.totality + counts
             table_prod.price_device = table_prod.totality * table_prod.price
-            # table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
             if table_prod.price_per_quantity:
                 table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
-                # if 'minus' in self.request.query_params:
-            #      if device_item.quantity > 1:
-            #             device_item.quantity -= 1
-            # else:
-            # #     device_item.quantityy +1
-            # elif device_item.quantity +1:
-            #     table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
-
-            # if table_prod.price_per_quantity:
-            #     table_prod.price_per_quantity = table_prod.price_device * device_item.quantity
-            # table_prod.price_per_quantity = tableprod.price_device * device_item.quantity
 
             table_prod.save()
             if table_prod.is_solid:
@@ -217,19 +212,11 @@ class NextPreviouTable(viewsets.ModelViewSet):
         tableprod.save()
 
         # get_pk = self.request.query_params.get('get_pk')
-        get_device = self.request.query_params.get('get_device')
-        table_product = Table_Product.objects.get(id=get_id)
 
         # if item.get('price_per_quantity') != None:
 
         # mul = table_product.totality * table_product.price
         # table_product.price_device = mul
-
-        summa = table_product.price_device * device_item.quantity
-        table_product.price_per_quantity = summa
-
-        table_product.save()
-        get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
 
@@ -282,6 +269,7 @@ class PreviouTable(viewsets.ModelViewSet):
         title = table_prod.title
         title = title.replace(" M", "")
         month = int(title)
+
         # table_prod = Table_Product.objects.filter(
         #     title__contains="%s M" % str(month)).first()
         # table_prod.totality = table_prod.count
