@@ -128,13 +128,13 @@ class APITable_HeadersViewSet(viewsets.ModelViewSet):
 
     queryset = Table_Headers.objects.all()
 
-class APITableProductUpdateViewSet(generics.CreateAPIView):
+class APITableProductUpdateViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = TableProductListSerializer
 
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         get_id = self.request.query_params.get('get_id')
         table_products = Table_Product.objects.filter(id=get_id)
         for table_product in table_products:
