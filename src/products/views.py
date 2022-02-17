@@ -139,6 +139,11 @@ class APITableProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Table_Product.objects.order_by('id')
 
+        table_products = Table_Product.objects.filter(is_solid=True)
+        for table_product in table_products:
+            table_product.price_device = table_product.totality * table_product.price
+            table_product.save()
+
         return queryset
 
 
