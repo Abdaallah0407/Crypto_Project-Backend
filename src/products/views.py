@@ -134,8 +134,9 @@ class APITableProductUpdateViewSet(generics.CreateAPIView):
     ]
     serializer_class = TableProductListSerializer
 
-    def post(self, request, *args, **kwargs):
-        table_products = Table_Product.objects.filter(is_solid=True)
+    def put(self, request, *args, **kwargs):
+        get_id = self.request.query_params.get('get_id')
+        table_products = Table_Product.objects.filter(id=get_id)
         for table_product in table_products:
             table_product.price_device = table_product.totality * table_product.price
             table_product.save()
