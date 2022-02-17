@@ -128,6 +128,7 @@ class APITable_HeadersViewSet(viewsets.ModelViewSet):
 
     queryset = Table_Headers.objects.all()
 
+
 class APITableProductUpdateViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
@@ -135,12 +136,14 @@ class APITableProductUpdateViewSet(viewsets.ModelViewSet):
     queryset = Table_Product.objects.all()
     serializer_class = TableProductListSerializer
 
-    def post(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         get_id = self.request.query_params.get('get_id')
-        table_products = Table_Product.objects.filter(id=get_id)
-        for table_product in table_products:
-            table_product.price_device = table_product.totality * table_product.price
-            table_product.save()
+        table_product = Table_Product.objects.filter(id=get_id).first()
+        table_product.price_device = table_product.totality * table_product.price
+        table_product.save()
+        # for table_product in table_products:
+        #     table_product.price_device = table_product.totality * table_product.price
+        #     table_product.save()
         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
 
 
