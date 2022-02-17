@@ -132,6 +132,7 @@ class APITableProductUpdateViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
+    queryset = Table_Product.objects.all()
     serializer_class = TableProductListSerializer
 
     def post(self, request, *args, **kwargs):
