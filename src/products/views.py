@@ -136,7 +136,7 @@ class APITableProductViewSet(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
     pagination_class = PaginationProducts
 
-    def get_queryset(self):
+    def post(self, request, *args, **kwargs):
         queryset = Table_Product.objects.order_by('id')
 
         table_products = Table_Product.objects.filter(is_solid=True)
