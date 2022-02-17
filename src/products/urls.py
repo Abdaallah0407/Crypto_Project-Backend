@@ -2,7 +2,7 @@ from django.urls import path
 from django.urls import include
 from rest_framework import routers
 
-from .views import SumTable,APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable, APIDeviceView, APIDeviceItemProduct, APIDeviceUpdateItem, PreviouTable
+from .views import APITableProductUpdateViewSet,SumTable,APITableProductViewSet, APITable_HeadersViewSet, DestroyAPICartItem, APICartItemProduct, FillTable, NextPreviouTable, APIDeviceView, APIDeviceItemProduct, APIDeviceUpdateItem, PreviouTable
 
 
 router = routers.DefaultRouter()
@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/destroy-cart/', DestroyAPICartItem.as_view(), name="destroy-cart"),
     path('api/fill-table/', FillTable.as_view(), name="destroy-cart"),
     path('api/device-update/', APIDeviceUpdateItem.as_view(), name="cart-update"),
+    path('api/productprice-update/', APITableProductUpdateViewSet.as_view(), name="productprice-update")
+    
     # path('api/next-table/', NextPreviouTable.as_view(), name="next-cart"),
     # path('api/device-item/', APIDeviceItemProduct.as_view(), name="device-item"),
 ]
