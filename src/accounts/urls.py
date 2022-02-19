@@ -8,8 +8,8 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('user/', UserAPI.as_view()),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
-    path('auth/', include('djoser.urls.jwt')),
+    path('api/user/', UserAPI.as_view()),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.authtoken')),
+    path('api/auth/', include('djoser.urls.jwt')),
 ]
