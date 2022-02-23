@@ -29,34 +29,34 @@ class APIAddSaleItemProduct(generics.CreateAPIView):
     queryset = Sale.objects.all()
 
     def post(self, request, *args, **kwargs):
+        # queryset = Table_Product.objects.filter(
+        #     pk=request.data['product']).first()
 
         sale, created = Sale.objects.get_or_create(user=request.user)
         product = Table_Product.objects.get(pk=request.data['product'])
+        # product = Table_Product.objects.get(pk=request.data['product'])
         # quantity = int(request.data['quantity'])
         SaleItem.objects.filter(
             sale=sale, product=product)
 
-        sale_item, created = SaleItem.objects.update_or_create(sale=sale, product=product)
+        sale_item, created = SaleItem.objects.update_or_create(
+            sale=sale, product=product)
         sale_item.save()
         return Response({"Success:Created"}, status=status.HTTP_201_CREATED)
-
-
 
 
 class APIDestroySaleItem(generics.DestroyAPIView):
     serializer_class = SaleItemSerializer
     permission_classes = [
         permissions.AllowAny
-    ]
+    ] 
     queryset = SaleItem.objects.all()
 
     def post(self, request, *args, **kwargs):
+        queryset = Table_Product.objects.get(
+            pk=request.data['product'])
         sale, created = Sale.objects.get_or_create(user=request.user)
         sale_item = SaleItem.objects.get(
-            sale=sale, product=request.data['product'])
+            sale=sale, product=queryset)
         sale_item.delete()
-
-        c = sale.items.count()
-        if c == 0:
-            sale.delete()
         return Response({"Success": "Deleted"}, status=status.HTTP_204_NO_CONTENT)
