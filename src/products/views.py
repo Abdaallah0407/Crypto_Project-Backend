@@ -137,13 +137,7 @@ class APITableProductUpdateViewSet(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
 
     def update(self, request, *args, **kwargs):
-
-        device_id = request.data['device_item']
-        print(device_id)
-        product = Device.objects.get(id=device_id)
-
-        device_item = ItemDevice.objects.filter(product=product).first()
-
+        device_item = ItemDevice.objects.all().first()
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(
@@ -157,13 +151,8 @@ class APITableProductUpdateViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
         table_product = self.get_object()
         table_product.price_device = table_product.totality * table_product.price
-        
-        table_products_update = Table_Product.objects.filter(is_solid=True)
-
-        for table_product_update in table_products_update:
-            table_product_update.price_per_quantity = table_product_update.price_device * device_item.quantity
-
-            table_product_update.save()
+        if table_product.price_per_quantity:
+            table_product.price_per_quantity = table_product.price_device * device_item.quantity
         table_product.save()
         return Response(serializer.data)
 
