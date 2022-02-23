@@ -157,7 +157,13 @@ class APITableProductUpdateViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
         table_product = self.get_object()
         table_product.price_device = table_product.totality * table_product.price
-        table_product.price_per_quantity = table_product.price_device * device_item.quantity
+        
+        table_products_update = Table_Product.objects.filter(is_solid=True)
+
+        for table_product_update in table_products_update:
+            table_product_update.price_per_quantity = table_product_update.price_device * device_item.quantity
+
+            table_product_update.save()
         table_product.save()
         return Response(serializer.data)
 
