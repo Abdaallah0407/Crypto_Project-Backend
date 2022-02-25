@@ -5,6 +5,7 @@ from django.db.models import query
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
+from rest_framework.generics import *
 from rest_framework.decorators import action
 from rest_framework import status
 from .models import CartItem, Table_Product, Table_Headers, Device, ItemDevice
@@ -256,40 +257,6 @@ class NextPreviouTable(viewsets.ModelViewSet):
         return queryset
 
 
-# class UpdatePriceQuantity(viewsets.ModelViewSet):
-#     def get_queryset(self, request, *args, **kwargs):
-#         product = Table_Product.objects.all().order_by('id')
-#         get_id = self.request.query_params.get('get_id')
-#         device_item = ItemDevice.objects.all().first()
-#         if device_item:
-
-#             if 'minus' in self.request.query_params:
-#                 if device_item.quantity > 1:
-#                     device_item.quantity -= 1
-#             else:
-#                 device_item.quantity += 1
-
-#         tableprod = Table_Product.objects.get(pk=get_id)
-#         title = tableprod.title
-#         title = title.replace(" M", "")
-#         month = int(title)
-#         table_prod = Table_Product.objects.filter(
-#             title__contains="%s M" % str(month+1)).first()
-
-#         for i in range(month+2, 61):
-#             update_month_product = Table_Product.objects.filter(
-#                 title__contains=get_id).first()
-
-#             table_prod = update_month_product.price_per_quantity * device_item.quantity
-
-#             table_prod = Table_Product.objects.update_or_create(
-#                 title="%s M" % i, price_per_quantity=table_prod)
-
-
-#         table_prod.save()
-#         tableprod.save()
-
-
 class PreviouTable(viewsets.ModelViewSet):
     serializer_class = TableProductListSerializer
     permission_classes = [
@@ -399,3 +366,49 @@ class SumTable(viewsets.ModelViewSet):
     #              summa.save()
 
     #     return Response(status=status.HTTP_201_CREATED)
+
+
+class APIResetProductUpdateViewSet(UpdateAPIView):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    queryset = Table_Product.objects.all()
+    serializer_class = TableProductListSerializer
+
+    def update(self, request, *args, **kwargs):
+
+        table_product = Table_Product.objects.all().first()
+        title = table_product.title
+        title = title.replace(" M", "")
+        month = int(title)
+
+        counts = table_product.count
+        
+        table_product.price_device = table_product.totality * table_product.price
+        if table_product.price_per_quantity:
+            table_product.price_per_quantity = None
+
+        is_solid = table_product.is_solid
+        if is_solid:
+            table_product.is_solid = True
+        else:
+            table_product.is_solid = False
+
+        table_product.save()
+
+        for i in range(month+1, 61):
+            prev_mon_table_prod = Table_Product.objects.filter(
+                title__contains="%s M" % str(i-1)).first()
+            table = Table_Product.objects.filter(
+                title__contains="%s M" % str(i)).first()
+
+            table.totality = prev_mon_table_prod.totality + counts
+            table.price_device = table.totality * table.price
+            if table.price_per_quantity:
+                table.price_per_quantity = None
+
+            table.save()
+            # if table.is_solid:
+            #     break
+
+        return Response({"Сброшено"},status=status.HTTP_202_ACCEPTED)

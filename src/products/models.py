@@ -47,7 +47,7 @@ class Table_Product(models.Model):
                               verbose_name="Количевство в месяц")
     totality = models.FloatField(
         null=True, blank=True, verbose_name='Совокупность в месяц')
-    price = models.IntegerField(blank=True, verbose_name='Цена')
+    price = models.IntegerField(blank=True,null=True, verbose_name='Цена')
     price_device = models.IntegerField(
         null=True, blank=True, verbose_name='Доступно за 1 апарат')
     price_per_quantity = models.IntegerField(
