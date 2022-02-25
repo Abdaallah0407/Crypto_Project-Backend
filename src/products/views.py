@@ -388,11 +388,11 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
 
-        is_solid = table_product.is_solid
-        if is_solid:
-            table_product.is_solid = True
-        else:
-            table_product.is_solid = False
+        # is_solid = table_product.is_solid
+        # if is_solid:
+        #     table_product.is_solid = True
+        # else:
+        #     table_product.is_solid = False
 
         table_product.save()
 
