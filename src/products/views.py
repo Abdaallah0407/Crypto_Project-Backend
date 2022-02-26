@@ -408,7 +408,7 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
                 table.price_per_quantity = None
 
             table.save()
-            if table.is_solid:
-                break
+            # if table.is_solid:
+            #     break
 
         return Response({"Сброшено"},status=status.HTTP_202_ACCEPTED)
