@@ -74,6 +74,51 @@ class APIDeviceUpdateItem(generics.CreateAPIView):
         return Response({"Success": "Created"}, status=status.HTTP_201_CREATED)
 
 
+class APIDeviceResetItem(UpdateAPIView):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    queryset = ItemDevice.objects.all()
+    serializer_class = DeviceItemSerializer
+
+    def update(self, request, *args, **kwargs):
+
+        device_id = request.data['device_item']
+        print(device_id)
+        product = Device.objects.get(id=device_id)
+
+        device_item = ItemDevice.objects.filter(product=product).first()
+
+        device_item.quantity = 1
+        device_item.save()
+
+        # table_product.price_device = table_product.totality * table_product.price
+        # if table_product.price_per_quantity:
+        #     table_product.price_per_quantity = None
+
+        # is_solid = table_product.is_solid
+        # if is_solid:
+        #     table_product.is_solid = True
+        # else:
+        #     table_product.is_solid = False
+
+        # for i in range(month+1, 61):
+        #     prev_mon_table_prod = Table_Product.objects.filter(
+        #         title__contains="%s M" % str(i-1)).first()
+        #     table = Table_Product.objects.filter(
+        #         title__contains="%s M" % str(i)).first()
+
+        #     table.totality = prev_mon_table_prod.totality + counts
+        #     table.price_device = table.totality * table.price
+        #     if table.price_per_quantity:
+        #         table.price_per_quantity = None
+        #     if table.is_solid:
+        #         table.is_solid = False
+        #     table.save()
+
+        return Response({"Сброшено"}, status=status.HTTP_202_ACCEPTED)
+
+
 class APICartItemProduct(generics.CreateAPIView):
     queryset = Table_Product.objects.all()
     serializer_class = CartItemSerializer
@@ -383,7 +428,7 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         month = int(title)
 
         counts = table_product.count
-        
+
         table_product.price_device = table_product.totality * table_product.price
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
@@ -409,6 +454,5 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
             if table.is_solid:
                 table.is_solid = False
             table.save()
-            
 
-        return Response({"Сброшено"},status=status.HTTP_202_ACCEPTED)
+        return Response({"Сброшено"}, status=status.HTTP_202_ACCEPTED)
