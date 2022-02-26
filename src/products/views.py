@@ -406,9 +406,9 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
             table.price_device = table.totality * table.price
             if table.price_per_quantity:
                 table.price_per_quantity = None
-
+            if table.is_solid:
+                table.is_solid = False
             table.save()
-            # if table.is_solid:
-            #     break
+            
 
         return Response({"Сброшено"},status=status.HTTP_202_ACCEPTED)
