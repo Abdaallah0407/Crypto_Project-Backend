@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import *
-from .serializers import NewsSerializer, BannerNewsSerializer, BannerNewsCategorySerializer
+from src.news.serializers import NewsSerializer
 
 
 class APINewsView(viewsets.ModelViewSet):
