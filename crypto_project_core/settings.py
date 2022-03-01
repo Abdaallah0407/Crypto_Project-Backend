@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'src.sales',
     'src.news',
     'src.contacts',
+    'src.abouts',
 ]
 
 MIDDLEWARE = [
