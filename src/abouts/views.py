@@ -21,6 +21,6 @@ class APIOurTeamView(viewsets.ModelViewSet):
     serializer_class = OurTeamSerializer
 
     def get_queryset(self):
-        queryset = Our_team.objects.order_by('-createdAt')
+        queryset = Our_team.objects.order_by('createdAt')
         return queryset
 
