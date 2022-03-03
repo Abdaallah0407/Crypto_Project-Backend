@@ -16,6 +16,14 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url=''
+        return url
+
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
