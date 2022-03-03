@@ -37,6 +37,13 @@ class News(models.Model):
     def image_url(self):
         if self.image and hasattr(self.image, 'url'):
             return self.image.url
+    # @property
+    # def get_photo_url(self):
+    #     if self.image and hasattr(self.image, 'url'):
+    #         return self.image.url
+    #     else:
+    #         return ''
+
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
