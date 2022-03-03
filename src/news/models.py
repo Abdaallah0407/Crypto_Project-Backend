@@ -16,13 +16,13 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def imageURL(self):
-        try:
-            url = self.image.url
-        except:
-            url=''
-        return url
+    # @property
+    # def imageURL(self):
+    #     try:
+    #         url = self.image.url
+    #     except:
+    #         url=''
+    #     return url
     
     # @property
     # def image_url(self):
@@ -33,7 +33,10 @@ class News(models.Model):
     #     if self.image:
     #         return getattr(self.photo, 'url', None)
     #     return None
-
+    @property
+    def image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
