@@ -8,6 +8,6 @@ from .views import  BackCallApi
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('api/backcall/', BackCallApi.as_view()),
 ]
