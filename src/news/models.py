@@ -23,6 +23,16 @@ class News(models.Model):
         except:
             url=''
         return url
+    
+    # @property
+    # def image_url(self):
+    #     """
+    #     Return self.photo.url if self.photo is not None, 
+    #     'url' exist and has a value, else, return None.
+    #     """
+    #     if self.image:
+    #         return getattr(self.photo, 'url', None)
+    #     return None
 
     class Meta:
         verbose_name = "Новость"
