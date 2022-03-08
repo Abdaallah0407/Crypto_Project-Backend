@@ -1,4 +1,5 @@
 # from django import views
+from operator import truediv
 from urllib import request
 from rest_framework import views
 from django.db.models import query
@@ -433,7 +434,11 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
 
-        # is_solid = table_product.is_solid
+        if table_product.is_solid:
+                table.is_solid = False
+
+        # else table_product.is_solid:
+        #         table.is_solid = False
         # if is_solid:
         #     table_product.is_solid = True
         # else:
