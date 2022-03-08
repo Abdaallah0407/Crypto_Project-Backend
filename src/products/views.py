@@ -365,20 +365,8 @@ class PreviouTable(viewsets.ModelViewSet):
             table_product.price_per_quantity = None
 
         table_product.save()
-        # get_device = Table_Product.objects.filter(id=get_id)
 
         return queryset
-
-
-# def counter():
-#     sum = 0
-
-#     for item in results:
-#         if item.get('price_per_quantity') != None:
-#             sum = sum+item.get('price_per_quantity')
-#     print(sum)
-# counter()
-
 
 class SumTable(viewsets.ModelViewSet):
     serializer_class = TableSumListSerializer
@@ -401,18 +389,6 @@ class SumTable(viewsets.ModelViewSet):
         print(total_cost)
         return total_cost
 
-    # def create(self):
-    #     price_per_quantity = Table_Product.objects.all().order_by('id')
-    #     price_quantity = price_per_quantity.price_per_quantity
-    #     summa = Table_Product.objects.filter(
-    #         price_per_quantity=price_quantity)
-    #     for item in ():
-    #          if item.get('price_per_quantity') != None:
-    #              summa = sum+item.get('price_per_quantity')
-
-    #              summa.save()
-
-    #     return Response(status=status.HTTP_201_CREATED)
 
 
 class APIResetProductUpdateViewSet(UpdateAPIView):
@@ -435,21 +411,7 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
 
-        # if table_product.is_solid:
-        #         table.is_solid = None
-
-        # else table_product.is_solid:
-        #         table.is_solid = False
-        # if is_solid:
-        #     table_product.is_solid = True
-        # else:
-        #     table_product.is_solid = False
-
         table_product.save()
-
-        # if table_product.is_solid:
-        #     return
-
         for i in range(month+1, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
                 title__contains="%s M" % str(i-1)).first()
