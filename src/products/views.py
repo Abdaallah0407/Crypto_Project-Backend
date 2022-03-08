@@ -1,5 +1,6 @@
 # from django import views
 from operator import truediv
+from pickle import FALSE
 from urllib import request
 from rest_framework import views
 from django.db.models import query
@@ -427,15 +428,17 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         title = table_product.title
         title = title.replace(" M", "")
         month = int(title)
-
+        
+        if table_product.is_solid:
+                table.is_solid = False
         counts = table_product.count
 
         table_product.price_device = table_product.totality * table_product.price
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
 
-        # if table_product.is_solid:
-        #         table.is_solid = None
+        if table_product.is_solid:
+                table.is_solid = None
 
         # else table_product.is_solid:
         #         table.is_solid = False
