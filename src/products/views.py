@@ -445,9 +445,9 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         #     table_product.is_solid = False
 
         table_product.save()
-        
-        if table_product.is_solid:
-            return
+
+        # if table_product.is_solid:
+        #     return
 
         for i in range(month+1, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
