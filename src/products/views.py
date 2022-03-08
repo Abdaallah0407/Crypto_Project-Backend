@@ -428,10 +428,6 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         title = table_product.title
         title = title.replace(" M", "")
         month = int(title)
-        
-        
-        if table_product.is_solid:
-                table.is_solid = False
 
         counts = table_product.count
 
