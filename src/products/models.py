@@ -53,7 +53,7 @@ class Table_Product(models.Model):
     price_per_quantity = models.IntegerField(
         null=True, blank=True, verbose_name='Доступная цена за количевство апаратов')
     is_solid = models.BooleanField(verbose_name="Закрасить", default=False)
-
+  
     def __str__(self):
         return self.title
 

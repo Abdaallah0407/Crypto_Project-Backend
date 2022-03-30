@@ -411,6 +411,8 @@ class APIResetProductUpdateViewSet(UpdateAPIView):
         if table_product.price_per_quantity:
             table_product.price_per_quantity = None
 
+        table_product.is_solid = False
+
         table_product.save()
         for i in range(month+1, 61):
             prev_mon_table_prod = Table_Product.objects.filter(
